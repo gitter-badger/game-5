@@ -54,6 +54,9 @@ export default {
      * @param {event} event The mouse-click event
      */
     leftClick(event) {
+      this.$socket.send('some data');
+
+      // Get coordinates of X,Y tile.
       const coordinates = UI.getViewportCoordinates(event);
 
       // Send to game engine that

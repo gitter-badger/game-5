@@ -39,6 +39,9 @@ import config from './core/config';
 
 export default {
   name: 'navarra',
+  created() {
+    console.log('hello');
+  },
   components: {
     GameCanvas, Chatbox, Info, Slots, ContextMenu,
   },
