@@ -4,6 +4,9 @@ const config = {
    */
   name: 'navarra',
   version: '0.0.1',
+  socket: {
+    port: 9000,
+  },
   map: {
     tileset: { // How big is the tileset?
       width: 0,

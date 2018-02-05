@@ -30,6 +30,9 @@ import config from '../core/config';
 export default {
   name: 'Game',
   props: ['game'],
+  created() {
+    this.$options.sockets.onmessage = data => console.log(data);
+  },
   methods: {
     /**
      * Right-click brings up context-menu
@@ -54,7 +57,7 @@ export default {
      * @param {event} event The mouse-click event
      */
     leftClick(event) {
-      this.$socket.send('some data');
+      this.$socket.sendObj({ awesome: 'data' });
 
       // Get coordinates of X,Y tile.
       const coordinates = UI.getViewportCoordinates(event);

@@ -2,7 +2,31 @@
   <div id="app">
     <img class="logo" src="./assets/logo.png" alt="Logo">
 
-    <div class="wrapper" @click.right="nothing">
+    <!-- Login screen -->
+    <div v-if="!game" class="wrapper login__screen">
+
+      <div class="bg">
+        <div v-if="screen === 'register'" class="register">
+          To register an account, please visit <a href="https://navarra-rpg.com/register">this page</a> to get start and then come back.
+        </div>
+        <div v-if="screen === 'login'" class="login">
+          <Login></Login>
+        </div>
+        <div class="button_group"  v-if="screen === 'main'">
+          <button @click="screen = 'login'" class="login">
+            Login
+          </button>
+
+          <button @click="screen = 'register'" class="register">
+            Register
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Game wrapper -->
+    <div class="wrapper" @click.right="nothing" v-if="game instanceof Object">
       <div class="left">
 
         <!-- Main canvas -->
@@ -21,6 +45,7 @@
 
       <context-menu :game="game"></context-menu>
     </div>
+    <!-- End Game wrapper -->
   </div>
 </template>
 
@@ -30,26 +55,26 @@ import Chatbox from './components/Chatbox';
 import Slots from './components/Slots';
 import Info from './components/Info';
 
+import Login from './components/ui/Login';
+
 // Sub Vue components
 import ContextMenu from './components/sub/ContextMenu';
 
-import Game from './core/game';
+// import Game from './core/game';
 import Engine from './core/engine';
 import config from './core/config';
 
 export default {
   name: 'navarra',
-  created() {
-    console.log('hello');
-  },
   components: {
-    GameCanvas, Chatbox, Info, Slots, ContextMenu,
+    GameCanvas, Chatbox, Info, Slots, ContextMenu, Login,
   },
   data() {
     return {
       config,
       loaded: false,
       game: false,
+      screen: 'login',
     };
   },
   methods: {
@@ -61,16 +86,18 @@ export default {
   },
   async mounted() {
     // Start game
-    this.game = new Game();
-    await this.game.start();
-    this.loaded = true;
+    // this.game = new Game();
+    // await this.game.start();
+    // this.loaded = true;
 
     // Start game engine
-    const engine = new Engine(this.game);
-    engine.start();
+    if (this.loaded) {
+      const engine = new Engine(this.game);
+      engine.start();
 
-    // Focus mouse on the game-map
-    document.querySelector('canvas#game-map').focus();
+      // Focus mouse on the game-map
+      document.querySelector('canvas#game-map').focus();
+    }
   },
 };
 </script>
@@ -92,6 +119,37 @@ export default {
 
   img.logo {
     margin-bottom: 1em;
+  }
+
+  div.login__screen {
+    width: 692px;
+    border: 5px solid #ababab;
+    box-sizing: border-box;
+    display: flex;
+    height: 505px;
+    align-content: center;
+    justify-content: center;
+    background-image: url("./assets/bg-screen.png");
+
+    div.bg {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 1em 0;
+      display: inline-flex;
+      justify-content: space-around;
+    }
+
+    div.button_group {
+      width: 100%;
+      display: inline-flex;
+      justify-content: space-around;
+
+      button {
+        background: #dedede;
+        border: 2px solid darken(#dedede, 10%);
+        font-size: 1.5em;
+        cursor: pointer;
+      }
+    }
   }
 
   div.wrapper {
