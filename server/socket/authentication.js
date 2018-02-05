@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 class Authentication {
-  static login(ws, data) {
+  static login(bus, data) {
     console.log('Logging in as...');
     const url = `${process.env.SITE_URL}/api/auth/login`;
 
@@ -12,7 +12,7 @@ class Authentication {
       .then((r) => {
         console.log('Success.');
         console.log(r.data);
-        ws.send(JSON.stringify(r.data));
+        bus.emit('login', r.data);
       })
       .catch((err) => {
         console.log('Error.');

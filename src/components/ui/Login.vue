@@ -11,18 +11,18 @@
 <script>
 export default {
   created() {
-    this.$options.sockets.onmessage = this.onMessage;
+    window.ws.on('login', (data) => {
+      console.log(data);
+    });
   },
   methods: {
-    onMessage(incoming) {
-      const parsed = incoming.data;
-      console.log(JSON.parse(parsed));
-    },
     cancel() {
       this.$emit('go:login');
     },
     login() {
-      this.$socket.sendObj({ event: 'login', username: this.username, password: this.password });
+      const data = { username: this.username, password: this.password };
+
+      window.ws.emit('login', data);
     },
   },
   data() {

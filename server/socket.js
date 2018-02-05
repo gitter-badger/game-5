@@ -1,10 +1,11 @@
 const Authentication = require('./socket/authentication');
+const wsEvents = require('ws-events');
 const WebSocket = require('ws');
 
 class Socket {
   constructor(port) {
     this.port = port;
-    console.log('Starting websocket server on port ' + port);
+    console.log(`Starting websocket server on port ${port}`);
   }
 
   /**
@@ -30,18 +31,19 @@ class Socket {
   static connection(ws) {
     console.log('Someone connected');
 
+    const bus = wsEvents(ws);
+
     // eslint-disable-next-line
-    ws.on('message', function incoming(message) {
-      const parsedMessage = JSON.parse(message);
+    bus.on('login', incoming => {
 
       const data = {
-        username: parsedMessage.username,
-        password: parsedMessage.password,
+        username: incoming.username,
+        password: incoming.password,
       };
 
       console.log(data);
 
-      Authentication.login(ws, data);
+      Authentication.login(bus, data);
     });
   }
 }
