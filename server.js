@@ -1,8 +1,8 @@
-const Socket = require('./server/socket');
+const Game = require('./server/game');
 require('dotenv').config();
 
-// Initialize the websocket class
-const socket = new Socket(9000);
+// Initialize the Game class with port number
+const game = new Game(9000);
 
-// Start the websocket server.
-socket.start();
+// Start the game server.
+game.start();

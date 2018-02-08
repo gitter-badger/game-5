@@ -4,8 +4,6 @@ import blockedMouse from '@/assets/graphics/ui/mouse/blocked.png';
 import config from './config';
 import UI from './utilities/ui';
 import bus from '../core/utilities/bus';
-import surfaceMap from '../../server/maps/layers/surface.json';
-
 
 class Map {
   constructor(level, images, player, npcs, items) {
@@ -431,33 +429,6 @@ class Map {
 
     // The new walkable/non-walkable grid
     this.path.grid = new PF.Grid(matrix);
-  }
-
-  /**
-   * Load map tile data
-   *
-   * @returns {array}
-   */
-  async load() {
-    const data = await Map.fetchMap(this.level);
-
-    return data;
-  }
-
-  /**
-   * Loads the map from an external JSON file
-   *
-   * @param {string} level The level of the map
-   * @returns {array}
-   */
-  static fetchMap(level) {
-    const mapToLoad = {
-      surface: surfaceMap,
-    };
-
-    return new Promise((resolve) => {
-      resolve(mapToLoad[level].layers);
-    });
   }
 }
 

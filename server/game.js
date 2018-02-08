@@ -1,4 +1,6 @@
 const Authentication = require('./socket/authentication');
+const Assets = require('./socket/assets');
+
 const wsEvents = require('ws-events');
 const WebSocket = require('ws');
 
@@ -31,20 +33,14 @@ class Socket {
   static connection(ws) {
     console.log('Someone connected');
 
+    // Event bus (for actions)
     const bus = wsEvents(ws);
 
-    // eslint-disable-next-line
-    bus.on('login', incoming => {
+    // 1. Player
+    bus.on('player:login', incoming => Authentication.login(bus, incoming));
 
-      const data = {
-        username: incoming.username,
-        password: incoming.password,
-      };
-
-      console.log(data);
-
-      Authentication.login(bus, data);
-    });
+    // 2. Asset managment
+    bus.on('client:load-data', () => Assets.loadData(bus));
   }
 }
 

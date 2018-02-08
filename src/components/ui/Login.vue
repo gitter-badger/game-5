@@ -1,28 +1,42 @@
 <template>
-  <div>
-    <input type="text" class="username" v-model="username">
-    <input type="password" class="password" v-model="password">
+  <div class="form">
+    <div class="inputs">
+      <input placeholder="Username" type="text" class="username" v-model="username" spellcheck="false" autocomplete="off">
+      <input placeholder="Password" type="password" class="password" v-model="password">
+    </div>
 
-    <button @click="login">Login</button>
-    <button @click="cancel">Cancel</button>
+    <div class="action_buttons">
+      <button class="button" @click="login">Login</button>
+      <button class="button" @click="cancel">Cancel</button>
+    </div>
   </div>
 </template>
 
 <script>
+import Client from './../../core/client';
+
 export default {
+  async mounted() {
+    // Start game
+    this.game = new Client();
+    await this.game.loadAssets();
+  },
   created() {
     window.ws.on('login', (data) => {
       console.log(data);
+      console.log(this.game);
     });
   },
   methods: {
     cancel() {
       this.$emit('go:login');
+      // Does nothing -- atm.
     },
+    // Send login request to server.
     login() {
       const data = { username: this.username, password: this.password };
 
-      window.ws.emit('login', data);
+      window.ws.emit('player:login', data);
     },
   },
   data() {
@@ -35,8 +49,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button {
-  font-size: 3em;
+@import "./src/assets/scss/main";
+
+div.form {
+  width: 100%;
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+
+    input {
+      font-size: 15pt;
+      outline: none;
+      padding: 5px 8px;
+      background: transparent;
+      border-style: solid;
+      color: rgb(192, 192, 83);
+      border-color: white;
+      border-width: 0 0 2px 0;
+      margin-bottom: 1em;
+      font-family: "ChatFont";
+      text-shadow: 1px 1px 0 #000;
+
+      &:focus {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  .action_buttons {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+
+    button {
+      font-size: 1.5em;
+    }
+  }
 }
 </style>
 

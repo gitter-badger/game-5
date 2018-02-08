@@ -60,12 +60,17 @@ import Login from './components/ui/Login';
 // Sub Vue components
 import ContextMenu from './components/sub/ContextMenu';
 
-// import Game from './core/game';
+// Core components
 import Engine from './core/engine';
 import config from './core/config';
 
 export default {
   name: 'navarra',
+  created() {
+    this.$on('go:login', () => {
+      console.log("Hey'");
+    });
+  },
   components: {
     GameCanvas, Chatbox, Info, Slots, ContextMenu, Login,
   },
@@ -85,11 +90,6 @@ export default {
     },
   },
   async mounted() {
-    // Start game
-    // this.game = new Game();
-    // await this.game.start();
-    // this.loaded = true;
-
     // Start game engine
     if (this.loaded) {
       const engine = new Engine(this.game);
@@ -134,6 +134,7 @@ export default {
     div.bg {
       background-color: rgba(0, 0, 0, 0.5);
       padding: 1em 0;
+      border-radius: 5px;
       display: inline-flex;
       justify-content: space-around;
     }
