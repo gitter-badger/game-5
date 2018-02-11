@@ -31,7 +31,7 @@ export default {
   name: 'Game',
   props: ['game'],
   created() {
-    this.$options.sockets.onmessage = data => console.log(data);
+    //
   },
   methods: {
     /**

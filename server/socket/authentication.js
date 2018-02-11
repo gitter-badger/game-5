@@ -7,24 +7,10 @@ class Authentication {
   }
 
   static async login(bus, data) {
-
     const player = await this.getToken(data).then(this.getProfile);
 
-    console.log(player);
-
-
-    // axios
-    //   .post(url, data)
-    //   .then((r) => { this.token = r.data; })
-    //   .then(await this.getProfile)
-    //   .then((response) => {
-    //     console.log(response.username, 'has logged in.');
-    //     bus.emit('login', response.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log('Error.');
-    //     console.log(err.response.status, err.response.data);
-    //   });
+    console.log(player.username, 'has logged in.');
+    bus.emit('login', player);
   }
 
   static getToken(data) {

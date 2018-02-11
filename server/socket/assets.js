@@ -12,6 +12,12 @@ class Assets {
       items,
     };
 
+    // // Create NPCs
+    // npcs.forEach(npc => block.npcs.push(new NPC(npc)), this);
+
+    // // Create items
+    // items.forEach(item => this.items.push(new Item(item)), this);
+
     bus.emit('client:send-data', block);
   }
 }

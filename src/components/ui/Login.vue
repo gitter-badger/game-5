@@ -13,23 +13,15 @@
 </template>
 
 <script>
-import Client from './../../core/client';
+import bus from '../../core/utilities/bus';
 
 export default {
-  async mounted() {
-    // Start game
-    this.game = new Client();
-    await this.game.loadAssets();
-  },
   created() {
-    window.ws.on('login', (data) => {
-      console.log(data);
-      console.log(this.game);
-    });
+    //
   },
   methods: {
     cancel() {
-      this.$emit('go:login');
+      bus.$emit('go:main');
       // Does nothing -- atm.
     },
     // Send login request to server.

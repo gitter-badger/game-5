@@ -11,15 +11,15 @@ class Client {
     this.map = null;
     this.background = null;
     this.foreground = null;
+    this.player = null;
 
     // Asset loading data
     this.images = [];
-    this.loadedData = [];
   }
 
   async loadAssets() {
     // Get data of NPCs other entities from server
-    this.constructor.loadData();
+    this.loadData();
 
     // Get images of tileset and entities from server
     this.images = await Promise.all(this.loadImages());
@@ -28,9 +28,15 @@ class Client {
   /**
    * Load data from connected server
    */
-  static loadData() {
+  loadData() {
     window.ws.emit('client:load-data');
-    window.ws.on('client:send-data', (data) => { this.loadedData = data; });
+    window.ws.on('client:send-data', (data) => {
+      this.items = data.items;
+      this.npcs = data.npcs;
+
+      this.background = data.map[0].data;
+      this.foreground = data.map[1].data;
+    });
   }
 
   /**

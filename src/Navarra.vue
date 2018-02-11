@@ -3,7 +3,7 @@
     <img class="logo" src="./assets/logo.png" alt="Logo">
 
     <!-- Login screen -->
-    <div v-if="!game" class="wrapper login__screen">
+    <div v-if="!loaded" class="wrapper login__screen">
 
       <div class="bg">
         <div v-if="screen === 'register'" class="register">
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Game wrapper -->
-    <div class="wrapper" @click.right="nothing" v-if="game instanceof Object">
+    <div class="wrapper" @click.right="nothing" v-if="loaded">
       <div class="left">
 
         <!-- Main canvas -->
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import Client from './core/client';
+
 import GameCanvas from './components/GameCanvas';
 import Chatbox from './components/Chatbox';
 import Slots from './components/Slots';
@@ -64,12 +66,26 @@ import ContextMenu from './components/sub/ContextMenu';
 import Engine from './core/engine';
 import config from './core/config';
 
+import bus from './core/utilities/bus';
+
 export default {
   name: 'navarra',
+  async mounted() {
+    // Start game
+    this.game = new Client();
+    await this.game.loadAssets();
+    bus.$emit('new:client', this.game);
+  },
   created() {
-    this.$on('go:login', () => {
-      console.log("Hey'");
+    bus.$on('go:main', () => {
+      this.screen = 'main';
     });
+
+    bus.$on('new:client', (data) => {
+      this.setClient(data);
+    });
+
+    window.ws.on('login', data => this.showCanvas(data));
   },
   components: {
     GameCanvas, Chatbox, Info, Slots, ContextMenu, Login,
@@ -79,25 +95,30 @@ export default {
       config,
       loaded: false,
       game: false,
-      screen: 'login',
+      screen: 'main',
     };
   },
   methods: {
+    setClient(data) {
+      this.game = data;
+    },
     nothing(event) {
       // Make right-click system for
       // rest of the game view.
       event.preventDefault();
     },
-  },
-  async mounted() {
-    // Start game engine
-    if (this.loaded) {
+    showCanvas(data) {
+      this.game.player = data;
+
+      this.loaded = true;
+      debugger;
+
       const engine = new Engine(this.game);
       engine.start();
 
       // Focus mouse on the game-map
       document.querySelector('canvas#game-map').focus();
-    }
+    },
   },
 };
 </script>
